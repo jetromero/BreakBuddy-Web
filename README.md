@@ -1,6 +1,6 @@
-# TRIminder Admin Dashboard
+# TriMinder Admin Dashboard
 
-A modern, compact web dashboard for managing TRIminder mobile app data. Built with React, TypeScript, TailwindCSS, and Supabase.
+A modern, compact web dashboard for managing TriMinder mobile app data. Built with React, TypeScript, TailwindCSS, and Supabase.
 
 ## Features
 
@@ -343,4 +343,5 @@ The `netlify.toml` file is already configured with:
 ## License
 
 [Your License Here]
+
 
