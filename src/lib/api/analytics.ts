@@ -1,6 +1,6 @@
 import { supabase } from '../supabaseClient'
 import type { AnalyticsData } from '@/types/database'
-import { format, subDays, subMonths, startOfWeek, startOfMonth, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
+import { format, subDays, subMonths, startOfWeek, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 
 export async function getAnalytics(departmentId?: number): Promise<AnalyticsData> {
   // Get students query
