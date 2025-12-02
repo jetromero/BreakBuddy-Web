@@ -2,6 +2,10 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/lib/supabaseClient'
 import bcrypt from 'bcryptjs'
 import type { AuthUser } from '@/types/auth'
+<<<<<<< HEAD
+=======
+import type { Admin } from '@/types/database'
+>>>>>>> d100483200e47b0518f0ec391267b158a320acb1
 
 interface AuthContextType {
   user: AuthUser | null
