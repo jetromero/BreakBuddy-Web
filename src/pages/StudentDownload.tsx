@@ -20,8 +20,15 @@ export function StudentDownload() {
     }, [])
 
     const handleDownload = () => {
-        // Replace with actual APK download link
-        window.open('/TriMinder.apk', '_blank')
+        // Try Vercel URL first, fallback to GitHub raw URL if needed
+        const vercelUrl = '/TriMinder.apk'
+        const githubUrl = 'https://raw.githubusercontent.com/Russelatan/triminder-web/main/public/TriMinder.apk'
+        
+        // Use Vercel URL, but you can temporarily switch to githubUrl if needed
+        window.open(vercelUrl, '_blank')
+        
+        // Fallback option (uncomment if Vercel URL doesn't work):
+        // window.open(githubUrl, '_blank')
     }
 
     return (
