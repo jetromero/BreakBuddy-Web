@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "upload-apk": "node scripts/upload-apk.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "@types/bcryptjs": "^2.4.6",
+    "@vercel/blob": "^2.0.0",
     "bcryptjs": "^3.0.3",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",

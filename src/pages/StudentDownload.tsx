@@ -26,12 +26,14 @@ export function StudentDownload() {
         setDownloadError(null)
 
         try {
-            // GitHub raw URL - direct download link
+            // Try Vercel Blob Storage URL first (from environment variable), fallback to GitHub
+            const blobUrl = 'https://p1xgcok9gug5omzf.public.blob.vercel-storage.com/TriMinder.apk'
             const githubUrl = 'https://raw.githubusercontent.com/Russelatan/triminder-web/main/public/TriMinder.apk'
+            const downloadUrl = blobUrl || githubUrl
             
             // Create a temporary anchor element for download
             const link = document.createElement('a')
-            link.href = githubUrl
+            link.href = downloadUrl
             link.download = 'TriMinder.apk'
             link.target = '_blank'
             link.rel = 'noopener noreferrer'
