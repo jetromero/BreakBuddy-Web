@@ -78,3 +78,6 @@ The build should show files being processed, and you should see `TriMinder.apk` 
 
 **TL;DR**: Commit the updated `vercel.json` and push to trigger a new deployment. The file is already in git, so it should work after rebuild!
 
+
+
+

@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function StudentDownload() {
     const navigate = useNavigate()
-    const [downloading, setDownloading] = useState(false)
-    const [downloadError, setDownloadError] = useState<string | null>(null)
 
     // Set page background
     useEffect(() => {
@@ -21,47 +19,13 @@ export function StudentDownload() {
         }
     }, [])
 
-    const handleDownload = async () => {
-        setDownloading(true)
-        setDownloadError(null)
-
-        try {
-            // Try Vercel Blob Storage URL first (from environment variable), fallback to GitHub
-            const blobUrl = 'https://p1xgcok9gug5omzf.public.blob.vercel-storage.com/TriMinder.apk'
-            const githubUrl = 'https://raw.githubusercontent.com/Russelatan/triminder-web/main/public/TriMinder.apk'
-            const downloadUrl = blobUrl || githubUrl
-            
-            // Create a temporary anchor element for download
-            const link = document.createElement('a')
-            link.href = downloadUrl
-            link.download = 'TriMinder.apk'
-            link.target = '_blank'
-            link.rel = 'noopener noreferrer'
-            
-            // Append to body, click, and remove
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-
-            // Set timeout to clear downloading state
-            setTimeout(() => {
-                setDownloading(false)
-            }, 2000)
-        } catch (error) {
-            setDownloading(false)
-            setDownloadError('Failed to start download. Please try again or contact support.')
-            console.error('Download error:', error)
-        }
+    const handleDownload = () => {
+        // Replace with actual APK download link
+        window.open('https://p1xgcok9gug5omzf.public.blob.vercel-storage.com/TriMinder.apk', '_blank')
     }
 
     return (
         <div style={styles.page}>
-            <style>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
             {/* Back Button - Fixed Top Left */}
             <button onClick={() => navigate('/')} style={styles.backButton}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -110,45 +74,12 @@ export function StudentDownload() {
                     </div>
 
                     {/* Download Button */}
-                    <button 
-                        onClick={handleDownload} 
-                        disabled={downloading}
-                        style={{
-                            ...styles.downloadButton,
-                            opacity: downloading ? 0.7 : 1,
-                            cursor: downloading ? 'not-allowed' : 'pointer'
-                        }}
-                    >
-                        {downloading ? (
-                            <>
-                                <div style={styles.spinner}></div>
-                                Starting Download...
-                            </>
-                        ) : (
-                            <>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                                </svg>
-                                Download APK
-                            </>
-                        )}
+                    <button onClick={handleDownload} style={styles.downloadButton}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        Download APK
                     </button>
-
-                    {downloadError && (
-                        <div style={styles.errorMessage}>
-                            <span style={styles.errorIcon}>⚠️</span>
-                            {downloadError}
-                            <br />
-                            <a 
-                                href="https://raw.githubusercontent.com/Russelatan/triminder-web/main/public/TriMinder.apk"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={styles.directLink}
-                            >
-                                Click here to download directly
-                            </a>
-                        </div>
-                    )}
 
                     <p style={styles.version}>Version 1.0.0 • Android 8.0+</p>
                 </div>
@@ -323,36 +254,5 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontSize: '12px',
         color: '#9ca3af',
         marginTop: '24px',
-    },
-    errorMessage: {
-        marginTop: '16px',
-        padding: '12px',
-        background: '#fef2f2',
-        border: '1px solid #fecaca',
-        borderRadius: '8px',
-        fontSize: '13px',
-        color: '#991b1b',
-        textAlign: 'center',
-        lineHeight: 1.5,
-    },
-    errorIcon: {
-        fontSize: '16px',
-        marginRight: '6px',
-    },
-    directLink: {
-        color: '#991b1b',
-        textDecoration: 'underline',
-        fontWeight: 500,
-        marginTop: '8px',
-        display: 'inline-block',
-    },
-    spinner: {
-        width: '16px',
-        height: '16px',
-        border: '2px solid rgba(255, 255, 255, 0.3)',
-        borderTopColor: 'white',
-        borderRadius: '50%',
-        animation: 'spin 0.8s linear infinite',
-        display: 'inline-block',
     },
 }

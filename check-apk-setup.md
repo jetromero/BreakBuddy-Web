@@ -51,3 +51,6 @@ npm run build
 - ❌ File not in public/ folder → Move it there
 - ❌ Build failing → Check Vercel deployment logs
 
+
+
+
