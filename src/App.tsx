@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Sidebar } from './components/layout/Sidebar'
@@ -29,8 +29,15 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   const { user, loading } = useAuth()
+  const location = useLocation()
 
-  if (loading) {
+  // Define public routes that don't require auth loading
+  const publicRoutes = ['/', '/student-download', '/login']
+  const isPublicRoute = publicRoutes.includes(location.pathname)
+
+  // Only show loading screen for protected routes
+  // Public routes should render immediately
+  if (loading && !isPublicRoute) {
     return (
       <div className="loading-container">
         <div className="loading-content">
