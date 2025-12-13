@@ -4,12 +4,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Sidebar } from './components/layout/Sidebar'
 import { Topbar } from './components/layout/Topbar'
-import { Welcome } from './pages/Welcome'
-import { LoginNew as Login } from './pages/LoginNew'
-import { StudentDownload } from './pages/StudentDownload'
+import { Landing } from './pages/Landing'
 import { Dashboard } from './pages/Dashboard'
-import { Admins } from './pages/Admins'
-import { Departments } from './pages/Departments'
 import { Students } from './pages/Students'
 import { StudentDetail } from './pages/StudentDetail'
 
@@ -32,7 +28,7 @@ function AppRoutes() {
   const location = useLocation()
 
   // Define public routes that don't require auth loading
-  const publicRoutes = ['/', '/student-download', '/login']
+  const publicRoutes = ['/']
   const isPublicRoute = publicRoutes.includes(location.pathname)
 
   // Only show loading screen for protected routes
@@ -50,35 +46,13 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Welcome />} />
-      <Route path="/student-download" element={<StudentDownload />} />
-      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
             <AppLayout>
               <Dashboard />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admins"
-        element={
-          <ProtectedRoute requireSuperAdmin>
-            <AppLayout>
-              <Admins />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/departments"
-        element={
-          <ProtectedRoute requireSuperAdmin>
-            <AppLayout>
-              <Departments />
             </AppLayout>
           </ProtectedRoute>
         }
@@ -104,6 +78,7 @@ function AppRoutes() {
         }
       />
       <Route path="/analytics" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/student-download" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

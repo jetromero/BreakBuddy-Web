@@ -158,7 +158,7 @@ export function StudentDetail() {
             <span className="chart-badge">Last 30 Days</span>
           </div>
           {usageHistory.length > 0 ? (
-            <ChartLine data={usageHistory} dataKey="minutes" strokeColor="#7f1d1d" />
+            <ChartLine data={usageHistory} dataKey="minutes" strokeColor="#2b8fa3" />
           ) : (
             <div className="empty-state">
               <svg className="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48">

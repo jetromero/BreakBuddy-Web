@@ -12,12 +12,12 @@ interface ChartBarProps {
 }
 
 const GRADIENT_COLORS = [
-  '#991b1b', // maroon-dark
-  '#b91c1c', // maroon
-  '#dc2626', // red  
-  '#7f1d1d', // maroon-darker
-  '#a16207', // amber-dark (accent)
-  '#ca8a04', // yellow-dark (accent)
+  '#113841', // teal-dark
+  '#1a5562', // teal-darker
+  '#227283', // teal-medium
+  '#2b8fa3', // teal (base)
+  '#4da8b9', // teal-light
+  '#66bdcf', // teal-lighter
 ]
 
 export function ChartBar({

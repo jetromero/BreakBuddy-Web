@@ -71,7 +71,7 @@
 .search-input:focus {
   outline: none;
   border-color: var(--color-primary-500);
-  box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.1);
+  box-shadow: 0 0 0 3px rgba(4, 177, 175, 0.1);
 }
 
 .search-input::placeholder {
@@ -117,7 +117,7 @@
 .filter-select:focus {
   outline: none;
   border-color: var(--color-primary-500);
-  box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.1);
+  box-shadow: 0 0 0 3px rgba(4, 177, 175, 0.1);
 }
 
 .active-filters {

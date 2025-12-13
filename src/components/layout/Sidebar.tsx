@@ -13,32 +13,11 @@ const navigation = [
     )
   },
   {
-    name: 'Students',
+    name: 'Notifications',
     path: '/students',
     icon: (
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    )
-  },
-]
-
-const adminNavigation = [
-  {
-    name: 'Admins',
-    path: '/admins',
-    icon: (
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-    )
-  },
-  {
-    name: 'Departments',
-    path: '/departments',
-    icon: (
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
     )
   },
@@ -52,9 +31,6 @@ interface SidebarProps {
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const location = useLocation()
   const { user } = useAuth()
-  const isSuperAdmin = user?.role === 'super_admin'
-
-  const allNav = isSuperAdmin ? [...navigation, ...adminNavigation] : navigation
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
@@ -65,12 +41,12 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </div>
           {!collapsed && (
             <div className="sidebar-logo-text">
-              <h1 className="sidebar-title">TriMinder</h1>
+              <h1 className="sidebar-title">BreakBuddy</h1>
             </div>
           )}
         </div>
         {!collapsed && (
-          <p className="sidebar-subtitle">Admin Dashboard</p>
+          <p className="sidebar-subtitle">Parent Dashboard</p>
         )}
         <button
           onClick={onToggle}
@@ -90,7 +66,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <nav className="sidebar-nav">
         <ul className="sidebar-nav-list">
-          {allNav.map((item) => {
+          {navigation.map((item) => {
             const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/')
             return (
               <li key={item.path}>

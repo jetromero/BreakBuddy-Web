@@ -59,22 +59,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .update({ last_login_at: new Date().toISOString() })
       .eq('id', admin.id)
 
-    // Determine role based on department_id
-    // NULL department_id = super_admin, otherwise sub_admin
-    const role: 'super_admin' | 'sub_admin' = admin.department_id === null ? 'super_admin' : 'sub_admin'
-
+    // All admins have the same role now - no more sub-admin distinction
     const authUser: AuthUser = {
       id: admin.id.toString(),
       email: admin.username, // Using username as email for compatibility
-      role,
-      department_id: admin.department_id,
+      role: 'super_admin',
+      department_id: null,
       profile: null,
       admin: {
         id: admin.id,
         name: admin.name,
         username: admin.username,
         password: '', // Don't store password
-        department_id: admin.department_id,
+        department_id: null,
         is_active: admin.is_active,
         last_login_at: admin.last_login_at,
         remember_token: null,

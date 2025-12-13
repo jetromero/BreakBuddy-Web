@@ -239,7 +239,7 @@ export async function getUsageTrend(
   let studentsQuery = supabase
     .from('profiles')
     .select('id')
-    .eq('role', 'student')
+    .eq('account_type', 'child')
 
   if (departmentId) {
     studentsQuery = studentsQuery.eq('department_id', departmentId)
@@ -361,8 +361,8 @@ export async function getDepartmentComparison() {
 export async function getHourlyScreentime(
   departmentId?: number
 ): Promise<Array<{ hour: string; minutes: number }>> {
-  // Get students based on department
-  let studentsQuery = supabase.from('profiles').select('id').eq('role', 'student')
+  // Get children based on department
+  let studentsQuery = supabase.from('profiles').select('id').eq('account_type', 'child')
   if (departmentId) {
     studentsQuery = studentsQuery.eq('department_id', departmentId)
   }
@@ -434,8 +434,8 @@ export async function getTopStudents(
       break
   }
 
-  // Get students based on department
-  let studentsQuery = supabase.from('profiles').select('id')
+  // Get children based on department
+  let studentsQuery = supabase.from('profiles').select('id').eq('account_type', 'child')
   if (departmentId) {
     studentsQuery = studentsQuery.eq('department_id', departmentId)
   }
@@ -486,5 +486,168 @@ export async function getTopStudents(
     .slice(0, 10)
 
   return topStudents
+}
+
+// Admin Dashboard Analytics - New functions based on schema
+export interface AdminDashboardStats {
+  totalUsers: number
+  totalParents: number
+  totalChildren: number
+  avgDailyScreenTime: number
+  screenTimeByAgeGroup: Array<{ ageGroup: string; avgMinutes: number; userCount: number }>
+  mostUsedApps: Array<{ appName: string; packageName: string; totalMinutes: number; userCount: number; appIcon: string | null }>
+}
+
+function calculateAge(dateOfBirth: string): number {
+  const today = new Date()
+  const birthDate = new Date(dateOfBirth)
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const monthDiff = today.getMonth() - birthDate.getMonth()
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--
+  }
+  return age
+}
+
+function getAgeGroup(age: number): string {
+  if (age < 6) return 'Under 6'
+  if (age <= 9) return '6-9'
+  if (age <= 12) return '10-12'
+  if (age <= 15) return '13-15'
+  if (age <= 17) return '16-17'
+  return '18+'
+}
+
+export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
+  // Get all profiles with their account types
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('id, account_type, date_of_birth')
+
+  if (profilesError) throw profilesError
+
+  const totalParents = profiles?.filter(p => p.account_type === 'parent').length || 0
+  const totalChildren = profiles?.filter(p => p.account_type === 'child').length || 0
+  const totalUsers = totalParents + totalChildren
+
+  // Only use child accounts for analytics
+  const childProfiles = profiles?.filter(p => p.account_type === 'child') || []
+  const childIds = childProfiles.map(p => p.id)
+
+  // Get average daily screen time (last 7 days) - children only
+  const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd')
+  const { data: usageData } = await supabase
+    .from('user_usage_daily')
+    .select('total_minutes, user_id')
+    .in('user_id', childIds)
+    .gte('usage_date', weekAgo)
+
+  const totalMinutes = usageData?.reduce((sum, u) => sum + u.total_minutes, 0) || 0
+  const uniqueUsers = new Set(usageData?.map(u => u.user_id)).size
+  const avgDailyScreenTime = uniqueUsers > 0 ? Math.round(totalMinutes / uniqueUsers / 7) : 0
+
+  // Calculate screen time by age group - children only
+  const ageGroupMinutes = new Map<string, { total: number; users: Set<string> }>()
+  
+  childProfiles.forEach(profile => {
+    if (profile.date_of_birth) {
+      const age = calculateAge(profile.date_of_birth)
+      const ageGroup = getAgeGroup(age)
+      const userUsage = usageData?.filter(u => u.user_id === profile.id) || []
+      const userTotal = userUsage.reduce((sum, u) => sum + u.total_minutes, 0)
+      
+      const current = ageGroupMinutes.get(ageGroup) || { total: 0, users: new Set<string>() }
+      current.total += userTotal
+      current.users.add(profile.id)
+      ageGroupMinutes.set(ageGroup, current)
+    }
+  })
+
+  const screenTimeByAgeGroup = Array.from(ageGroupMinutes.entries())
+    .map(([ageGroup, data]) => ({
+      ageGroup,
+      avgMinutes: data.users.size > 0 ? Math.round(data.total / data.users.size) : 0,
+      userCount: data.users.size,
+    }))
+    .sort((a, b) => {
+      const order = ['Under 6', '6-9', '10-12', '13-15', '16-17', '18+']
+      return order.indexOf(a.ageGroup) - order.indexOf(b.ageGroup)
+    })
+
+  // Get most used apps (last 7 days) - all users
+  // First test without date filter to check RLS
+  const { data: appUsage } = await supabase
+    .from('app_usage_logs')
+    .select('app_name, package_name, usage_minutes, user_id, app_icon, date')
+    .order('date', { ascending: false })
+    .limit(100)
+
+
+  const appMinutes = new Map<string, { appName: string; packageName: string; total: number; users: Set<string>; appIcon: string | null }>()
+  
+  appUsage?.forEach(log => {
+    const key = log.package_name
+    const current = appMinutes.get(key) || { 
+      appName: log.app_name || log.package_name, 
+      packageName: log.package_name, 
+      total: 0, 
+      users: new Set<string>(),
+      appIcon: log.app_icon 
+    }
+    current.total += log.usage_minutes
+    current.users.add(log.user_id)
+    if (log.app_icon) current.appIcon = log.app_icon
+    appMinutes.set(key, current)
+  })
+
+  const mostUsedApps = Array.from(appMinutes.values())
+    .map(app => ({
+      appName: app.appName,
+      packageName: app.packageName,
+      totalMinutes: app.total,
+      userCount: app.users.size,
+      appIcon: app.appIcon,
+    }))
+    .sort((a, b) => b.totalMinutes - a.totalMinutes)
+    .slice(0, 10)
+
+  return {
+    totalUsers,
+    totalParents,
+    totalChildren,
+    avgDailyScreenTime,
+    screenTimeByAgeGroup,
+    mostUsedApps,
+  }
+}
+
+export async function sendUpdateNotification(title: string, body: string): Promise<{ success: boolean; sentCount: number }> {
+  // Get all profiles (registered users) instead of FCM tokens
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('id')
+
+  if (profilesError) throw profilesError
+
+  if (!profiles || profiles.length === 0) {
+    return { success: true, sentCount: 0 }
+  }
+
+  // Create notification records for all users
+  const notifications = profiles.map(profile => ({
+    user_id: profile.id,
+    title,
+    body,
+    type: 'other' as const,
+    metadata: { notification_type: 'app_update' },
+  }))
+
+  const { error: insertError } = await supabase
+    .from('notifications')
+    .insert(notifications)
+
+  if (insertError) throw insertError
+
+  return { success: true, sentCount: profiles.length }
 }
 

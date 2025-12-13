@@ -26,7 +26,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   const handleLogout = async () => {
     setShowDropdown(false)
     await signOut()
-    navigate('/login')
+    navigate('/')
   }
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -96,7 +96,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
             className={`topbar-user-btn ${showDropdown ? 'open' : ''}`}
           >
             <div className="topbar-user-avatar">
-              <img src="/EVSU_logo.png" alt="EVSU" className="topbar-avatar-img" />
+              <img src="/logo.svg" alt="Admin" className="topbar-avatar-img" />
             </div>
             <div className="topbar-user-info">
               <p className="topbar-user-name">

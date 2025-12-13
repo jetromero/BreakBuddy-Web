@@ -33,7 +33,7 @@
 
 .filter-dropdown-trigger.open {
     border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.1);
+    box-shadow: 0 0 0 3px rgba(4, 177, 175, 0.1);
 }
 
 .filter-dropdown-trigger .placeholder {
