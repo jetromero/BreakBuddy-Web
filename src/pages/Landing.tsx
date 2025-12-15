@@ -141,7 +141,7 @@ export function Landing() {
             </p>
             <div style={styles.showcaseFeatures}>
               <div style={styles.showcaseFeature}>
-                <div style={styles.showcaseIcon} style={{ ...styles.showcaseIcon, background: '#ffe5e5' }}>
+                <div style={{ ...styles.showcaseIcon, background: '#ffe5e5' }}>
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
                     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                   </svg>
@@ -152,7 +152,7 @@ export function Landing() {
                 </div>
               </div>
               <div style={styles.showcaseFeature}>
-                <div style={styles.showcaseIcon} style={{ ...styles.showcaseIcon, background: '#e0f2fe' }}>
+                <div style={{ ...styles.showcaseIcon, background: '#e0f2fe' }}>
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
@@ -163,7 +163,7 @@ export function Landing() {
                 </div>
               </div>
               <div style={styles.showcaseFeature}>
-                <div style={styles.showcaseIcon} style={{ ...styles.showcaseIcon, background: '#d1fae5' }}>
+                <div style={{ ...styles.showcaseIcon, background: '#d1fae5' }}>
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
@@ -1096,15 +1096,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: '14px',
     color: 'rgba(255, 255, 255, 0.5)',
     margin: 0,
-  },
-  heroTitleHighlight: {
-    color: '#04b1af',
-  },
-  heroDescription: {
-    fontSize: '18px',
-    color: '#5a6c73',
-    lineHeight: 1.6,
-    margin: '0 0 32px 0',
   },
   // Modal
   modalOverlay: {
