@@ -1,4 +1,4 @@
-# TriMinder Admin Dashboard
+# BreakBuddy Admin Dashboard
 
 A modern, compact web dashboard for managing TriMinder mobile app data. Built with React, TypeScript, TailwindCSS, and Supabase.
 
